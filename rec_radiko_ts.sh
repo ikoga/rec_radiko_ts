@@ -5,6 +5,10 @@
 # License is MIT (see LICENSE file)
 set -u
 
+SAVE_PREFIX="/radio"
+DATE_SUFFIX=`date "+%Y%m%d"`
+
+
 radiko_session=""
 
 # Define authorize key value (from http://radiko.jp/apps/js/playerCommon.js)
@@ -488,7 +492,7 @@ else
 
   if [ ${ret} -ne 0 ]; then
     # Add .m4a
-    output="${output}.m4a"
+    output="${SAVE_PREFIX}/${output}/${output}-${DATE_SUFFIX}.m4a"
   fi
 fi
 
