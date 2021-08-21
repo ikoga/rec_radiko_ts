@@ -22,7 +22,7 @@ $ ./rec_radiko_ts.sh [options]
 |-u _URL_||番組URL|ラジコサイトの番組表から番組詳細ページへ移動したあとのURLを元に `-s` `-f` `-t` の値を自動で取得する|
 |-m _MAIL_||ラジコプレミアム メールアドレス||
 |-p _PASSWORD_||ラジコプレミアム パスワード||
-|-o _PATH_||出力パス|未指定の場合カレントディレクトリに `放送局ID_開始日時_終了日時.m4a` というファイルを作成|
+|-o _FILENAME_||出力ファイル名|指定すると /radio/_FILENAME_/_FILENAME_-YYYYmmdd.m4a で出力する|
 
 <a id="param_note1" name="param_note1">*1</a> http://radiko.jp/v3/station/region/full.xml のIDと同じ。  
 <a id="param_note2" name="param_note2">*2</a> どちらかのオプションを指定すること。`-t` および `-d` の両方が指定されていた場合、終了日時は長くなるほうに合わせる。  
@@ -32,9 +32,9 @@ $ ./rec_radiko_ts.sh [options]
 ## 実行例
 ```
 # エリア内の局
-$ ./rec_radiko_ts.sh -s RN1 -f 201705020825 -t 201705020835 -o "/hoge/2017-05-02 日経電子版NEWS(朝).m4a"
+$ ./rec_radiko_ts.sh -s RN1 -f 201705020825 -t 201705020835 -o nikkei
 # エリア外の局 (エリアフリー)
-$ ./rec_radiko_ts.sh -s YBC -f 201704300855 -t 201704300900 -o "/hoge/2017-04-30 ラジオで詰め将棋.m4a" -m "foo@example.com" -p "password"
+$ ./rec_radiko_ts.sh -s YBC -f 201704300855 -t 201704300900 -o tsumeshogi -m "foo@example.com" -p "password"
 # 終了日時ではなく録音時間で指定
 $ ./rec_radiko_ts.sh -s RN1 -f 201705020825 -d 10
 # 番組URLから
@@ -43,7 +43,7 @@ $ ./rec_radiko_ts.sh -u 'http://radiko.jp/#!/ts/YFM/20170603223000'
 
 もっとも単体で動かすよりはcronとして以下のように仕掛けると便利でしょう。
 ```
-37 8 * * 1,2,3,4,5 rec_radiko_ts.sh -s RN1 -f "`date +\%Y\%m\%d`0825" -t "`date +\%Y\%m\%d`0835" -o "/hoge/`date +\%Y-\%m-\%d` 日経電子版NEWS(朝).m4a"
+37 8 * * 1,2,3,4,5 rec_radiko_ts.sh -s RN1 -f "`date +\%Y\%m\%d`0825" -d 10 -o nikkei
 ```
 
 
@@ -56,6 +56,10 @@ $ ./rec_radiko_ts.sh -u 'http://radiko.jp/#!/ts/YFM/20170603223000'
     - curl 7.55.1
     - xmllint using libxml version 20904
     - ffmpeg 3.3.3
+- openSUSE Leap 15.3
+    - curl 7.66.0
+    - xmllint: using libxml version 20907
+    - ffmpeg 4.4
 
 余談ですが、Windows 10 Creators UpdateビルドでのWindows Subsystem for LinuxのUbuntuでも動作します。
 
