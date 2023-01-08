@@ -7,6 +7,7 @@ set -u
 
 SAVE_PREFIX="/radio"
 DATE_SUFFIX=`date "+%Y%m%d"`
+CURL_PROXY=""
 
 
 radiko_session=""
@@ -51,6 +52,7 @@ login() {
 
   # Login
   login_json=$(curl \
+      ${CURL_PROXY} \
       --silent \
       --request POST \
       --data-urlencode "mail=${mail}" \
@@ -131,6 +133,7 @@ extract_login_value() {
 logout() {
   # Logout
   curl \
+    ${CURL_PROXY} \
     --silent \
     --request POST \
     --data-urlencode "radiko_session=${radiko_session}" \
@@ -355,7 +358,7 @@ if [ -n "${url}" ]; then
   fi
 
   # Extract record end datetime
-  totime=$(curl --silent "http://radiko.jp/v3/program/station/weekly/${station_id}.xml" \
+  totime=$(curl ${CURL_PROXY} --silent "http://radiko.jp/v3/program/station/weekly/${station_id}.xml" \
     | xmllint --xpath "/radiko/stations/station[@id='${station_id}']/progs/prog[@ft='${ft}']/@to" - \
     | sed -n 's/^[ ]\{0,\}to=["'']\{0,\}\([0-9]\{14,14\}\)["'']\{0,\}$/\1/p' \
     | cut -c 1-12)
@@ -439,6 +442,7 @@ fi
 
 # Authorize 1
 auth1_res=$(curl \
+    ${CURL_PROXY} \
     --silent \
     --header "X-Radiko-App: pc_html5" \
     --header "X-Radiko-App-Version: 0.0.1" \
@@ -467,6 +471,7 @@ if [ -n "${radiko_session}" ]; then
   auth2_url_param="?radiko_session=${radiko_session}"
 fi
 curl \
+    ${CURL_PROXY} \
     --silent \
     --header "X-Radiko-Device: pc" \
     --header "X-Radiko-User: dummy_user" \
